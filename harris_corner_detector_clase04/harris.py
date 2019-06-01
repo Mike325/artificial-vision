@@ -6,7 +6,7 @@ from scipy.ndimage import filters
 from PIL import Image
 
 
-def compute_harris_response(im,sigma=9):
+def compute_harris_response(im,sigma=10):
 	""" Compute the Harris corner detector response function
 	for each pixel in a graylevel image. """
 	# derivatives
