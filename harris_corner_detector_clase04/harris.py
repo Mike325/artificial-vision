@@ -19,7 +19,7 @@ from os import path as p
 
 _FILEPATH = p.abspath('../imagenes_proyectos/')
 __version__ = "0.0.2"
-
+#blur_kernel = 1
 
 def compute_harris_response(im, sigma=15):
     """ Compute the Harris corner detector response function
@@ -114,6 +114,14 @@ def parseArgs():
         dest='sigma',
         help='Set sigma, yep I know, no so useful')
 
+    parser.add_argument(
+        '-b',
+        '--blur',
+        type=int,
+        default=35,
+		dest='blur_kernel',
+		help='Set a dimensions for a square kernel to be use on the gaussian blur, the bigger the number the bigger the effect')
+
     # parser.add_argument(
     #     '-v',
     #     '--verbose',
@@ -145,10 +153,11 @@ def main():
     filename = p.join(_FILEPATH, args.filename + '.jpg')
     sigma = args.sigma
     threshold = args.threshold
+    blur_kernel = args.blur_kernel
 
     img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
-    blur = cv2.GaussianBlur(img, (35, 35), 0)
-    im = numpy.array(img)
+    blur = cv2.GaussianBlur(img, (blur_kernel, blur_kernel), 0)
+    im = numpy.array(blur)
     harrisim = compute_harris_response(im, sigma)
     filtered_coords = get_harris_points(harrisim, 6, threshold)
     plot_harris_points(im, blur, img, filtered_coords)
