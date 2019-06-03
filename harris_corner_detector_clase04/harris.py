@@ -1,17 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Python2 compatibility
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import with_statement
+from __future__ import division
+
 import argparse
 import numpy
-import matplotlib.pyplot as plt
+import logging
 import cv2
+import matplotlib.pyplot as plt
 from scipy.ndimage import filters
 from os import path as p
 # import pylab
 # from PIL import Image
 
 _FILEPATH = p.abspath('../imagenes_proyectos/')
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 def compute_harris_response(im, sigma=15):
@@ -74,6 +81,7 @@ def plot_harris_points(img_points, img_blur, img_real, filtered_coords):
     im3.title.set_text('key points')
     plt.show()
 
+
 def parseArgs():
     """TODO: Docstring for parseArgs.
     :returns: TODO
@@ -85,9 +93,27 @@ def parseArgs():
     parser.add_argument(
         '-f',
         '--file',
+        type=str,
         default='pic03_a',
         dest='filename',
         help='Set the file/image to use')
+
+    parser.add_argument(
+        '-t',
+        '--threshold',
+        type=float,
+        default=0.1,
+        dest='threshold',
+        help='Set threshold, yep I know, no so useful')
+
+    parser.add_argument(
+        '-s',
+        '--sigma',
+        type=int,
+        default=15,
+        dest='sigma',
+        help='Set sigma, yep I know, no so useful')
+
     # parser.add_argument(
     #     '-v',
     #     '--verbose',
@@ -95,6 +121,7 @@ def parseArgs():
     #     action='store_const',
     #     const='DEBUG',
     #     help='a shortcut for --log-level=DEBUG')
+
     # parser.add_argument(
     #     '-q',
     #     '--quiet',
@@ -102,16 +129,30 @@ def parseArgs():
     #     action='store_const',
     #     const='CRITICAL',
     #     help='a shortcut for --log-level=CRITICAL')
-    # parser.add_argument('--version', action='version', version=__version__)
+
+    parser.add_argument('--version', action='version', version=__version__)
 
     return parser.parse_args()
 
 
-args = parseArgs()
-args.filename = p.join(_FILEPATH, args.filename + '.jpg')
-img = cv2.imread(args.filename, cv2.IMREAD_GRAYSCALE)
-blur = cv2.GaussianBlur(img, (149, 149), 0)
-im = numpy.array(blur)
-harrisim = compute_harris_response(im)
-filtered_coords = get_harris_points(harrisim, 6)
-plot_harris_points(im, blur, img, filtered_coords)
+def main():
+    """ Main function
+    :returns: TODO
+
+    """
+    args = parseArgs()
+
+    filename = p.join(_FILEPATH, args.filename + '.jpg')
+    sigma = args.sigma
+    threshold = args.threshold
+
+    img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+    blur = cv2.GaussianBlur(img, (149, 149), 0)
+    im = numpy.array(blur)
+    harrisim = compute_harris_response(im, sigma)
+    filtered_coords = get_harris_points(harrisim, 6, threshold)
+    plot_harris_points(im, blur, img, filtered_coords)
+
+
+if __name__ == "__main__":
+    main()
