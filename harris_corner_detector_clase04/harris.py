@@ -74,7 +74,7 @@ def plot_harris_points(img_points, img_blur, img_real, filtered_coords):
     plt.axis('off')
     im3 = plt.subplot(223)
     plt.imshow(img_points)
-    plt.plot([p[1] for p in filtered_coords], [p[0] for p in filtered_coords], '*')
+    plt.plot([p[1] for p in filtered_coords], [p[0] for p in filtered_coords], 'g*')
     plt.axis('off')
     im1.title.set_text('real')
     im2.title.set_text('blur')
@@ -147,8 +147,8 @@ def main():
     threshold = args.threshold
 
     img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
-    blur = cv2.GaussianBlur(img, (149, 149), 0)
-    im = numpy.array(blur)
+    blur = cv2.GaussianBlur(img, (35, 35), 0)
+    im = numpy.array(img)
     harrisim = compute_harris_response(im, sigma)
     filtered_coords = get_harris_points(harrisim, 6, threshold)
     plot_harris_points(im, blur, img, filtered_coords)
