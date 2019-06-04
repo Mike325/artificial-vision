@@ -1,0 +1,5 @@
+Con theano
+https://github.com/cvlab-epfl/LIFT.git
+
+Con thensorflow
+https://github.com/cvlab-epfl/tf-lift.git
